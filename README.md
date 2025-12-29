@@ -1,6 +1,9 @@
 # Compilers
 
-**TODO: Add description**
+This repo contains a collection of parsers, tokenizers, compilers, interpreters and other stuff aroung them
+which I wrote in Elixir.
+
+Currently, it contains only an optimized `Brainfuck` compiler to `C`.
 
 ## Installation
 
@@ -18,4 +21,3 @@ end
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at <https://hexdocs.pm/compilers>.
-
