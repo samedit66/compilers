@@ -32,10 +32,12 @@ defmodule Compilers.Brainfuck do
   def compile_file!(bf_file, options \\ []) do
     c_code = File.read!(bf_file) |> compile()
 
-    c_file = "#{Path.basename(bf_file, ".bf")}.c"
+    file_name = Path.basename(bf_file, ".bf")
+
+    c_file = "#{file_name}.c"
     File.write!(c_file, c_code)
 
-    executable = Keyword.get(options, :executable, "output")
+    executable = Keyword.get(options, :executable, file_name)
     c_compiler = Keyword.get(options, :c_compiler, "gcc")
     System.cmd(c_compiler, ["-O2", "-o", executable, c_file], into: IO.stream())
   end
