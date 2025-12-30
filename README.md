@@ -1,6 +1,6 @@
 # Compilers
 
-This repo contains a collection of parsers, tokenizers, compilers, interpreters and other stuff aroung them
+This repo contains a collection of parsers, tokenizers, compilers, interpreters and other stuff around them
 which I wrote in Elixir.
 
 Currently, it contains only an optimized `Brainfuck` compiler to `C`.
