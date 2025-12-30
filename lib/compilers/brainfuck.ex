@@ -63,22 +63,22 @@ defmodule Compilers.Brainfuck do
   defp gen_bytecode([], commands), do: Enum.reverse(commands)
 
   defp gen_bytecode(["." | rest], commands),
-    do: gen_bytecode(rest, [{:out} | commands])
+    do: gen_bytecode(rest, [:out | commands])
 
   defp gen_bytecode(["," | rest], commands),
-    do: gen_bytecode(rest, [{:in} | commands])
+    do: gen_bytecode(rest, [:in | commands])
 
   defp gen_bytecode(["[", "-", "]" | rest], commands),
-    do: gen_bytecode(rest, [{:zero} | commands])
+    do: gen_bytecode(rest, [:zero | commands])
 
   defp gen_bytecode(["[", "+", "]" | rest], commands),
-    do: gen_bytecode(rest, [{:zero} | commands])
+    do: gen_bytecode(rest, [:zero | commands])
 
   defp gen_bytecode(["[" | rest], commands),
-    do: gen_bytecode(rest, [{:while} | commands])
+    do: gen_bytecode(rest, [:while | commands])
 
   defp gen_bytecode(["]" | rest], commands),
-    do: gen_bytecode(rest, [{:end} | commands])
+    do: gen_bytecode(rest, [:end | commands])
 
   defp gen_bytecode(["+" | _rest] = tokens, commands),
     do: gen_bytecode_repeated(tokens, "+", :add, commands)
@@ -122,19 +122,19 @@ defmodule Compilers.Brainfuck do
 
   defp gen_c_code([], c_code), do: Enum.reverse(c_code)
 
-  defp gen_c_code([{:out} | rest], c_code),
+  defp gen_c_code([:out | rest], c_code),
     do: gen_c_code(rest, ["putchar(arr[i]);" | c_code])
 
-  defp gen_c_code([{:in} | rest], c_code),
+  defp gen_c_code([:in | rest], c_code),
     do: gen_c_code(rest, ["arr[i] = getchar();" | c_code])
 
-  defp gen_c_code([{:zero} | rest], c_code),
+  defp gen_c_code([:zero | rest], c_code),
     do: gen_c_code(rest, ["arr[i] = 0;" | c_code])
 
-  defp gen_c_code([{:while} | rest], c_code),
+  defp gen_c_code([:while | rest], c_code),
     do: gen_c_code(rest, ["while(arr[i]) {" | c_code])
 
-  defp gen_c_code([{:end} | rest], c_code),
+  defp gen_c_code([:end | rest], c_code),
     do: gen_c_code(rest, ["}" | c_code])
 
   defp gen_c_code([{:add, n} | rest], c_code),
