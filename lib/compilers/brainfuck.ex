@@ -45,6 +45,7 @@ defmodule Compilers.Brainfuck do
       code
       |> tokenize()
       |> gen_bytecode([])
+      |> optimize([])
       |> gen_c_code([])
 
     (@prologue ++ compiled_program ++ @epilogue)
@@ -94,6 +95,28 @@ defmodule Compilers.Brainfuck do
     command = {command_name, Enum.count(repeated)}
     gen_bytecode(rest, [command | commands])
   end
+
+  defp optimize([], optimized), do: Enum.reverse(optimized)
+
+  defp optimize([{:add, n}, {:sub, m} | rest], optimized) when n > m,
+    do: optimize(rest, [{:add, n - m} | optimized])
+
+  defp optimize([{:add, n}, {:sub, m} | rest], optimized) when n < m,
+    do: optimize(rest, [{:sub, m - n} | optimized])
+
+  defp optimize([{:add, n}, {:sub, m} | rest], optimized) when n == m,
+    do: optimize(rest, optimized)
+
+  defp optimize([{:sub, n}, {:add, m} | rest], optimized) when n > m,
+    do: optimize(rest, [{:sub, n - m} | optimized])
+
+  defp optimize([{:sub, n}, {:add, m} | rest], optimized) when n < m,
+    do: optimize(rest, [{:add, m - n} | optimized])
+
+  defp optimize([{:sub, n}, {:add, m} | rest], optimized) when n == m,
+    do: optimize(rest, optimized)
+
+  defp optimize([command | rest], optimized), do: optimize(rest, [command | optimized])
 
   defp gen_c_code([], c_code), do: Enum.reverse(c_code)
 
